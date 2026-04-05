@@ -1,7 +1,9 @@
 package com.example.coffeeorderingproject.domain.userpoint.entity;
 
 import com.example.coffeeorderingproject.common.entity.ModifiableEntity;
+import com.example.coffeeorderingproject.common.exception.BusinessException;
 import com.example.coffeeorderingproject.domain.user.entity.User;
+import org.springframework.http.HttpStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -33,14 +35,14 @@ public class UserPoint extends ModifiableEntity {
 
     public void charge(Long amount) {
         if (amount <= 0) {
-            throw new IllegalArgumentException("충전 금액은 0보다 커야 합니다.");
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "충전 금액은 0보다 커야 합니다.");
         }
         this.balance += amount;
     }
 
     public void deduct(Long amount) {
         if (this.balance < amount) {
-            throw new IllegalArgumentException("잔액이 부족합니다.");
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "잔액이 부족합니다.");
         }
         this.balance -= amount;
     }
